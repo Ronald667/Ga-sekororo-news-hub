@@ -1,0 +1,6 @@
+{
+  "name": "Ga-Sekororo Community & Media Portal",
+  "description": "Community news portal, AI image generator, photo analyzer, and immersive 3D cultural landmark viewer for Ga-Sekororo.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
