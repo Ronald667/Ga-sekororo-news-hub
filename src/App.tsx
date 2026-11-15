@@ -36,6 +36,7 @@ export default function App() {
   const [quickCategory, setQuickCategory] = useState<any>("Community");
   const [quickBody, setQuickBody] = useState("");
   const [quickAuthor, setQuickAuthor] = useState("Valley Contributor");
+  const [quickImage, setQuickImage] = useState("https://images.unsplash.com/photo-1541888946425-d0fbb18f064f?auto=format&fit=crop&q=80&w=1000");
 
   const fetchArticles = async () => {
     try {
@@ -78,7 +79,7 @@ export default function App() {
           title: quickTitle,
           category: quickCategory,
           body: quickBody,
-          image_url: "https://images.unsplash.com/photo-1541888946425-d0fbb18f064f?auto=format&fit=crop&q=80&w=1000",
+          image_url: quickImage,
           author: quickAuthor,
         }),
       });
@@ -227,6 +228,27 @@ export default function App() {
                   <option value="Drama">Drama</option>
                   <option value="Culture">Culture</option>
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Upload Image from Gallery
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={e => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        setQuickImage(reader.result as string);
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-950/50 dark:file:text-emerald-300 hover:file:bg-emerald-100 transition-all cursor-pointer"
+                />
               </div>
 
               <div>

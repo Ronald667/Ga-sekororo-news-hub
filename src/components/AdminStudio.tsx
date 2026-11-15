@@ -205,14 +205,37 @@ create trigger on_auth_user_created
 
               <div>
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
-                  Image URL
+                  Upload from Local Gallery or URL
                 </label>
-                <input
-                  type="text"
-                  value={imageUrl}
-                  onChange={e => setImageUrl(e.target.value)}
-                  className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
-                />
+                <div className="space-y-3">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={e => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setImageUrl(reader.result as string);
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-950/50 dark:file:text-emerald-300 hover:file:bg-emerald-100 transition-all cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    value={imageUrl}
+                    onChange={e => setImageUrl(e.target.value)}
+                    placeholder="Or paste image URL..."
+                    className="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500"
+                  />
+                  {imageUrl && (
+                    <div className="relative h-28 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800">
+                      <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 

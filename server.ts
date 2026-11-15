@@ -20,6 +20,20 @@ const ai = new GoogleGenAI({
   },
 });
 
+function safeJsonParse(text: string, fallback: any = {}) {
+  try {
+    let clean = text.trim();
+    if (clean.startsWith("```json")) {
+      clean = clean.replace(/^```json/, "").replace(/```$/, "").trim();
+    } else if (clean.startsWith("```")) {
+      clean = clean.replace(/^```/, "").replace(/```$/, "").trim();
+    }
+    return JSON.parse(clean);
+  } catch (e) {
+    return fallback;
+  }
+}
+
 // In-memory database for Ga-Sekororo stories
 interface Article {
   id: string;
@@ -194,11 +208,15 @@ app.post("/api/ai/analyze-image", async (req, res) => {
     }
 
     const text = response.text || "{}";
-    const data = JSON.parse(text);
+    const data = safeJsonParse(text, {
+      title: "Community Heritage Feature",
+      category: "Community",
+      body: "A wonderful moment captured in the Ga-Sekororo valley.",
+      caption: "Community gathering."
+    });
     res.json({ success: true, analysis: data });
   } catch (err: any) {
     console.error("Image analysis error:", err);
-    // Return a structured fallback response instead of failing hard
     res.json({
       success: true,
       analysis: {
@@ -238,7 +256,12 @@ app.post("/api/ai/generate-story", async (req, res) => {
       });
     }
 
-    const data = JSON.parse(response.text || "{}");
+    const data = safeJsonParse(response.text || "{}", {
+      title: "New Development Milestone in Ga-Sekororo",
+      category: "Community",
+      body: "The Ga-Sekororo community continues to make remarkable strides in local development, education, and cultural preservation.",
+      author: "Community Editor"
+    });
     res.json({ success: true, story: data });
   } catch (err: any) {
     console.error("Story generation error:", err);
